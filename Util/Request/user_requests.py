@@ -20,8 +20,8 @@ def get_user_permission():
     secure_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=10))
     scopes = "user-read-private%20user-read-email%20user-library-read%20playlist-modify-public%20playlist-modify-private"
     url = url.format(client_id, "code", redirect_url, scopes, secure_string)
-    webbrowser.open(url)
-    return secure_string
+    #webbrowser.open(url)
+    return secure_string, url
 
 def get_access_token(code):
     config = read_properties()
