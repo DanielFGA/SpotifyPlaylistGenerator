@@ -1,8 +1,9 @@
-import requests
 import json
 
-from Util.Model.song import Song, Features
+import requests
+
 import Util.Request.requests as rq
+from Util.Model.song import Song, Features
 
 
 def get_favorites_songs(auth_token):
@@ -92,8 +93,14 @@ def set_features_for_songs(auth_token, songs):
         for id in range(offset, limit):
             id_concat += id_concat_list[id]
 
-        response_features = json.loads(requests.get(get_song_features_url.format(id_concat),
-                                                    headers={'Authorization': rq.header.format(auth_token)}).text)
+        get_feature_response = requests.get(get_song_features_url.format(id_concat),
+                                            headers={'Authorization': rq.header.format(auth_token)})
+
+        while (get_feature_response.status_code != 200):
+            get_feature_response = requests.get(get_song_features_url.format(id_concat),
+                                                headers={'Authorization': rq.header.format(auth_token)})
+
+        response_features = json.loads(get_feature_response.text)
 
         for feature in response_features.get("audio_features"):
             songs[offset].set_features(Features(

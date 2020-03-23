@@ -2,47 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Select songs.</title>
-    <div>
-        <h1>Playlists: </h1><br>
-        <label type="text">Playlist:</label>
-        <ul>
-            {% for playlist in playlists %}
-                <li>
-                    <label>{{ playlist.name }}</label>
-                    <label>
-                        <input type="checkbox" name="zutat" value="like">
-                        Yes :)
-                    </label>
-                    |
-                    <label>
-                        <input type="checkbox" name="zutat" value="dont like">
-                        No :(
-                    </label>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div>
-        <h1>Songs: </h1><br>
-        <label type="text">Song:</label>
-        <ul>
-            {% for song in songs %}
-                <li>
-                    <label>{{ song.name}} from {{song.artist}}</label>
-                    <label>
-                        <input type="checkbox" name="zutat" value="like">
-                        Yes :)
-                    </label>
-                    |
-                    <label>
-                        <input type="checkbox" name="zutat" value="dont like">
-                        No :(
-                    </label>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+    <title>Select songs</title>
+    <form action=go method="GET">
+        {% csrf_token %}
+        <div>
+            <button type="submit">Generate</button>
+            <input type="text" id="playlist_name" name="playlist_name" placeholder="select a name"/>
+        </div>
+
+        <div>
+            <table>
+                <tr align="left">
+                    <th>Playlist name</th>
+                    <th>Yes or no (ignore: leave empty)</th>
+                    <label type="text">Playlist:</label>
+                    <ul>
+                        {% for playlist in playlists %}
+                            <tr align="left">
+                                <th>{{ playlist.name }}</th>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" name="playlist_yes" value="{{ playlist.id }}">Yes
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="playlist_no" value="{{ playlist.id }}">No
+                                    </label>
+                                <th>
+                            </tr>
+                        {% endfor %}
+                </ul>
+            </table>
+        </div>
+
+        <div>
+            <table>
+                <tr align="left">
+                    <th>Track</th>
+                    <th>Artist</th>
+                    <th>Yes or no (ignore: leave empty)</th>
+                    <label type="text">Playlist:</label>
+                    <ul>
+                        {% for song in songs %}
+                            <tr align="left">
+                                <th>{{ song.name }}</th>
+                                <th>{{ song.artist }}</th>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" name="song_yes" value="{{ song.id }}">Yes
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="song_no" value="{{ song.id }}">No
+                                    </label>
+                                <th>
+                            </tr>
+                        {% endfor %}
+                </ul>
+            </table>
+        </div>
+
+    </form>
 </head>
 <body>
 

@@ -1,7 +1,3 @@
-import random
-import string
-import webbrowser
-
 # Create your models here.
 class User(object):
 
@@ -11,6 +7,8 @@ class User(object):
         self.secure_string = ""
         self.id = ""
         self.display_name = ""
+        self.songs = list()
+        self.playlists = list()
 
     def set_auth_code(self, auth_code):
         self.auth_code = auth_code
@@ -26,6 +24,12 @@ class User(object):
 
     def set_display_name(self, display_name):
         self.display_name = display_name
+
+    def set_songs(self, songs):
+        self.songs = songs
+
+    def set_playlists(self, playlists):
+        self.playlists = playlists
 
     def __repr__(self):
         return "auth_code={}, access_token={}, secure_string={}".format(self.auth_code, self.access_token, self.secure_string)

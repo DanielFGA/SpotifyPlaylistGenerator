@@ -1,9 +1,10 @@
-import requests
 import json
 
+import requests
+
+import Util.Request.requests as rq
 from Util.Model.playlist import Playlist
 from Util.Model.song import Song
-import Util.Request.requests as rq
 
 
 def get_playlists(auth_token):
@@ -12,7 +13,8 @@ def get_playlists(auth_token):
     response = requests.get(url, headers={'Authorization': rq.header.format(auth_token)})
 
     for response_item in json.loads(response.text).get("items"):
-        playlists.append(Playlist(response_item.get("id"), response_item.get("name")))
+        playlists.append(Playlist(response_item.get("id"), response_item.get("name"),
+                                  response_item.get("external_urls").get("spotify")))
 
     return playlists
 
@@ -62,7 +64,7 @@ def create_playlist(name, describtion, public, auth_token, user_id):
 
     response = requests.post(url=url, data=data, headers={'Authorization': rq.header.format(auth_token)})
     response_json = json.loads(response.text)
-    return response_json.get("id")
+    return Playlist(response_json.get("id"), name, response_json.get("external_urls").get("spotify"))
 
 def add_songs_to_playlist(auth_token, songs, playlist_id):
     if (len(songs) > 50):

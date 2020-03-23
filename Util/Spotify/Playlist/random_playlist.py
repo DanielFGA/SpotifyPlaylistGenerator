@@ -1,9 +1,12 @@
+from itertools import product
+
+import numpy as np
+
 from Util.MachineLearning.ada_boost import WeakSongClassifier, AdaBoost
+from Util.MachineLearning.binary_classification_LR import BinaryClassification
 from Util.MachineLearning.gaussian_discriminant_analysis import GaussianDiscriminantAnalysis
 from Util.MachineLearning.matrix import Matrix
-from Util.MachineLearning.binary_classification_LR import BinaryClassification
-from itertools import product
-import numpy as np
+
 
 def normalize_function(x, min_x, max_x):
     return (x - min_x) / (max_x - min_x)
@@ -93,10 +96,10 @@ def find_songs_gda(good_songs, bad_songs, songs):
     song_matrix_gda = []
 
     for song in songs:
-        if (song.id in good_songs):
+        if (song in good_songs):
             song.my_class = 1
             song_matrix_gda.append(song.get_feature_vector_with_class())
-        if (song.id in bad_songs):
+        if (song in bad_songs):
             song.my_class = -1
             song_matrix_gda.append(song.get_feature_vector_with_class())
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your new playlist</title>
+    <h1>I am done! :)</h1>
+    <div>
+        <h3>Playlist name: {{ playlist_name }}</h3>
+        <a href="{{ playlist_link }}">Open playlist</a><br>
+    </div>
+    <div>
+        <table>
+            <tr align="left">
+                <th>Track</th>
+                <th>Artist</th>
+                <label type="text">Songs:</label>
+                <ul>
+                    {% for song in songs %}
+                        <tr align="left">
+                            <th>{{ song.name }}</th>
+                            <th>{{ song.artist }}</th>
+                        </tr>
+                    {% endfor %}
+            </ul>
+        </table>
+    </div>
+
+</head>
+<body>
+
+</body>
+</html>
