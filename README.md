@@ -1,0 +1,2 @@
+# SpotifyPlaylistGenerator
+This is currently a private research project. I try to develop a website, that generate song recommendations based on favorites songs and songs from chosen playlists. Currently, this project reads all songs from the current user favorites list and playlists. Then it searches for recommendation and ad it to the set of songs. At last it filters all these songs with machine learning algorithm. Therefore, the user chooses songs he wants to hear and songs he doesn't want to hear. 
