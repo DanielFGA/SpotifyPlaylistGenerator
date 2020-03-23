@@ -4,6 +4,7 @@ import numpy as np
 
 from Util.MachineLearning.ada_boost import WeakSongClassifier, AdaBoost
 from Util.MachineLearning.binary_classification_LR import BinaryClassification
+from Util.MachineLearning.clustering import Clustering
 from Util.MachineLearning.gaussian_discriminant_analysis import GaussianDiscriminantAnalysis
 from Util.MachineLearning.matrix import Matrix
 
@@ -120,10 +121,37 @@ def find_songs_gda(good_songs, bad_songs, songs):
 
     return fitting_songs
 
-def classify_songs(songs, good_songs, bad_songs):
+
+def find_songs_clustering(good_songs, bad_songs, songs):
+    centers = np.zeros(shape=(2, len(songs[0].get_feature_vector())))
+    dataset = []
+    fitting_songs = list()
+
+    for song in songs:
+        if (song in good_songs):
+            centers[0] += song.get_feature_vector()
+        if (song in bad_songs):
+            centers[1] += song.get_feature_vector()
+
+    centers[0] = centers[0] / len(good_songs)
+    centers[1] = centers[1] / len(bad_songs)
+
+    for song in songs:
+        dataset.append(song.get_feature_vector_with_class())
+
+    clustering = Clustering(dataset, centers)
+    clustering.assign_center()
+    assert len(clustering.dataset) == len(songs), "The length of the clustering dataset differs from the origin"
+    for i in range(len(songs)):
+        if clustering.dataset[i][len(clustering.dataset[i]) - 1] == 0:
+            fitting_songs.append(songs[i])
+
+    return fitting_songs
+
+
+def classify_songs(songs, good_songs, bad_songs, algorithm):
     songs_norm = normalize(songs)
-    return find_songs_gda(good_songs, bad_songs, songs_norm)
-
-
-
-
+    if algorithm == "GDA":
+        return find_songs_gda(good_songs, bad_songs, songs_norm)
+    if algorithm == "Cluster":
+        return find_songs_clustering(good_songs, bad_songs, songs_norm)

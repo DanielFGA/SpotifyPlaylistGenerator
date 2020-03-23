@@ -7,7 +7,17 @@
         {% csrf_token %}
         <div>
             <button type="submit">Generate</button>
-            <input type="text" id="playlist_name" name="playlist_name" placeholder="select a name"/>
+            <input type="text" id="playlist_name" name="playlist_name" placeholder="select a playlist name"/>
+        </div>
+
+        <div>
+            <label>
+                Choose the algorithm:<br>
+                <select name="algorithm" size=2>
+                    <option value="GDA" selected="selected">Gaussian Discriminant Analysis</option>
+                    <option value="Cluster">Clustering</option>
+                </select>
+            </label>
         </div>
 
         <div>

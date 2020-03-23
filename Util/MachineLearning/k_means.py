@@ -1,5 +1,7 @@
-import numpy as np
 from random import randrange
+
+import numpy as np
+
 
 class KMeans(object):
 
@@ -7,6 +9,7 @@ class KMeans(object):
         self.k = k
         self.dataset_orgin = dataset
         self.amount_data = len(self.dataset_orgin)
+        self.center_index = len(self.dataset_orgin[0])
         self.re_init()
 
     def re_init(self):
@@ -36,7 +39,7 @@ class KMeans(object):
     def assign_centre(self):
         for data in range(self.amount_data):
             min_dist_centre = self.get_center_min_dist(data)
-            self.dataset[data][2] = self.centre[min_dist_centre][2]
+            self.dataset[data][self.center_index] = self.centre[min_dist_centre][self.center_index]
 
     def get_center_min_dist(self, data_index):
         min_dist_centre_index = 0
@@ -48,20 +51,19 @@ class KMeans(object):
                 min_dist_centre_index = centre_index
         return min_dist_centre_index
 
-
     def re_calc_centre(self):
         centre_mean = np.zeros([self.k, 3])
         for data in range(self.amount_data):
             for i in range(self.k):
-                if (self.centre[i][2] == self.dataset[data][2]):
-                    centre_mean[i][0] += self.dataset[data][0]
-                    centre_mean[i][1] += self.dataset[data][1]
-                    centre_mean[i][2] += 1
+                if (self.centre[i][self.center_index] == self.dataset[data][self.center_index]):
+                    for y in range(self.center_index - 1):
+                        centre_mean[i][y] += self.dataset[data][y]
+                    centre_mean[i][self.center_index] += 1
 
         for i in range(self.k):
-            self.centre[i][0] = centre_mean[i][0] / centre_mean[i][2]
-            self.centre[i][1] = centre_mean[i][1] / centre_mean[i][2]
-            self.centre[i][2] = i+1
+            for y in range(self.center_index - 1):
+                self.centre[i][y] = centre_mean[i][y] / centre_mean[i][self.center_index]
+            self.centre[i][self.center_index] = i + 1
 
     def __repr__(self):
         return "centers = {c}".format(c=self.centre)

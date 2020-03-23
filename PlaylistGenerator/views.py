@@ -4,7 +4,7 @@ from django.template import loader
 import Util.Request.requests as rq
 from PlaylistGenerator.models import User
 from Util.Spotify.Browse.recommended_songs import get_recommended_songs_forall
-from Util.Spotify.Playlist.random_playlist import classify_songs
+from Util.Spotify.Playlist.find_fitting_songs import classify_songs
 
 user = User()
 
@@ -54,6 +54,7 @@ def authorizes_access(request):
 
 def generate_playlist(request):
     template = loader.get_template('PlaylistGenerator/finish.html')
+    algorithm = request.GET.get("algorithm")
     playlist_name = request.GET.get("playlist_name") if len(request.GET.get("playlist_name")) > 0 else "unnamed"
     good_song_ids = request.GET.getlist("song_yes") if request.GET.get("song_yes") else list()
     bad_song_ids = request.GET.getlist("song_no") if request.GET.get("song_no") else list()
@@ -79,9 +80,10 @@ def generate_playlist(request):
 
     user.set_songs(distict_sorted_list(user.songs))
 
-    fitting_songs = classify_songs(user.songs, good_songs, bad_songs)
+    fitting_songs = classify_songs(user.songs, good_songs, bad_songs, algorithm)
 
-    new_playlist = rq.create_playlist(playlist_name, "Generated from ...", False, user.access_token, user.id)
+    new_playlist = rq.create_playlist(playlist_name, "Generated from ... with algorithm {}"
+                                      .format(get_algorithm_name(algorithm)), False, user.access_token, user.id)
 
     rq.add_songs_to_playlist(user.access_token, fitting_songs, new_playlist.id)
 
@@ -96,3 +98,11 @@ def generate_playlist(request):
 
 def distict_sorted_list(unsorted):
     return list(set(sorted(unsorted)))
+
+
+def get_algorithm_name(algorithm):
+    if algorithm == "GDA":
+        return "Gaussian Discriminant Analysis"
+    if algorithm == "Cluster":
+        return "Clustering"
+    return "... i forgot"
