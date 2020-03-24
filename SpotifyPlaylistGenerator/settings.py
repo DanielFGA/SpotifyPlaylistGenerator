@@ -1,3 +1,9 @@
+## -- ##
+from SpotifyPlaylistGenerator.properties import Properties
+
+config = Properties()
+## -- ##
+
 """
 Django settings for SpotifyPlaylistGenerator project.
 
@@ -25,8 +31,12 @@ SECRET_KEY = ')8tq5!0hk8%c*ndl$g1)*_^4jbge^z3)8d(a*it5%*#u=o8w_^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+## -- ##
+if config.host != None:
+    ALLOWED_HOSTS = [config.host]
+else:
+    ALLOWED_HOSTS = []
+## -- ##
 
 # Application definition
 
