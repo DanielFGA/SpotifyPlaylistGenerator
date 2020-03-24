@@ -25,11 +25,5 @@ class User(models.Model):
     def set_display_name(self, display_name):
         self.display_name = display_name
 
-    def set_songs(self, songs):
-        self.songs = songs
-
-    def set_playlists(self, playlists):
-        self.playlists = playlists
-
     def __repr__(self):
         return "auth_code={}, access_token={}, secure_string={}".format(self.auth_code, self.access_token, self.secure_string)

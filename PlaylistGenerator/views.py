@@ -1,10 +1,12 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 
-import Util.Request.requests as rq
 from PlaylistGenerator.models import User
 from Util.Spotify.Browse.recommended_songs import get_recommended_songs_forall
 from Util.Spotify.Playlist.find_fitting_songs import classify_songs
+from Util.SpotifyRequest.playlist_requests import *
+from Util.SpotifyRequest.song_requests import *
+from Util.SpotifyRequest.user_requests import *
 
 
 def start(request):
@@ -13,7 +15,7 @@ def start(request):
 
 def auth_start(request):
     user = User.objects.create()
-    secure_string, url =  rq.get_user_permission()
+    secure_string, url = get_user_permission()
     user.set_secure_string(secure_string)
     user.save()
     return HttpResponseRedirect(url)
@@ -25,8 +27,8 @@ def authorizes_access(request):
     user = User.objects.get(secure_string=secure_string)
 
     user.set_auth_code(code)
-    user.set_access_token(rq.get_access_token(code))
-    user_id, user_display_name = rq.get_user_info(user.access_token)
+    user.set_access_token(get_access_token(code))
+    user_id, user_display_name = get_user_info(user.access_token)
     user.set_id(user_id)
     user.set_display_name(user_display_name)
 
@@ -67,9 +69,9 @@ def generate_playlist(request):
 
     for user_playlist in playlists:
         if user_playlist.id in good_playlist_ids:
-            good_songs.extend(rq.get_playlist_songs(user.access_token, user_playlist))
+            good_songs.extend(get_playlist_songs(user.access_token, user_playlist))
         if user_playlist.id in bad_playlist_ids:
-            bad_songs.extend(rq.get_playlist_songs(user.access_token, user_playlist))
+            bad_songs.extend(get_playlist_songs(user.access_token, user_playlist))
 
     for song in songs:
         if song.id in good_song_ids:
@@ -78,16 +80,16 @@ def generate_playlist(request):
             bad_songs.append(song)
 
     songs.extend(get_recommended_songs_forall(user.access_token, good_songs))
-    rq.set_features_for_songs(user.access_token, songs)
+    set_features_for_songs(user.access_token, songs)
 
     songs = (distict_sorted_list(songs))
 
     fitting_songs = classify_songs(songs, good_songs, bad_songs, algorithm)
 
-    new_playlist = rq.create_playlist(playlist_name, "Generated from ... with algorithm {}"
-                                      .format(get_algorithm_name(algorithm)), False, user.access_token, user.user_id)
+    new_playlist = create_playlist(playlist_name, "Generated from ... with algorithm {}"
+                                   .format(get_algorithm_name(algorithm)), False, user.access_token, user.user_id)
 
-    rq.add_songs_to_playlist(user.access_token, fitting_songs, new_playlist.id)
+    add_songs_to_playlist(user.access_token, fitting_songs, new_playlist.id)
 
     context = {
         'playlist_name': new_playlist.name,
@@ -99,11 +101,11 @@ def generate_playlist(request):
 
 
 def get_playlists_and_songs(user):
-    playlists = rq.get_playlists(user.access_token)
+    playlists = get_playlists(user.access_token)
     playlists = sorted(playlists)
 
-    songs = rq.get_favorites_songs(user.access_token)
-    songs.extend(rq.get_playlists_songs(user.access_token, playlists))
+    songs = get_favorites_songs(user.access_token)
+    songs.extend(get_playlists_songs(user.access_token, playlists))
     songs = set(songs)
     songs = sorted(songs)
 

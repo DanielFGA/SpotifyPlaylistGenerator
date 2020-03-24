@@ -1,8 +1,9 @@
-import requests
 import json
 
+import requests
+
 from Util.Model.song import Song
-import Util.Request.requests as rq
+from Util.SpotifyRequest.requests import concat_parameter, generate_parameter
 
 
 def get_recommendations_seed(auth_token, seed_artist, seed_genres, seed_tracks):
@@ -11,10 +12,10 @@ def get_recommendations_seed(auth_token, seed_artist, seed_genres, seed_tracks):
 
     songs = list()
     url = "https://api.spotify.com/v1/recommendations?{}"
-    url_parameter = rq.concat_parameter([
-        rq.generate_parameter("seed_artists", seed_artist, "%2C"),
-        rq.generate_parameter("seed_genres", seed_genres, "%2C"),
-        rq.generate_parameter("seed_tracks", seed_tracks, "%2C")], "&")
+    url_parameter = concat_parameter([
+        generate_parameter("seed_artists", seed_artist, "%2C"),
+        generate_parameter("seed_genres", seed_genres, "%2C"),
+        generate_parameter("seed_tracks", seed_tracks, "%2C")], "&")
     header = "Bearer {}"
 
     get_recommendations_seed_response = requests.get(url.format(url_parameter), headers={'Authorization': header.format(auth_token)})

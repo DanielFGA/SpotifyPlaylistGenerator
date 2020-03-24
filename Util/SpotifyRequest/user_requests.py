@@ -1,8 +1,11 @@
-import requests
 import json
-import webbrowser
 import random
 import string
+
+import requests
+
+from Util.SpotifyRequest.requests import header
+
 
 def read_properties():
     properties = open('settings.properties', 'r').read()
@@ -38,6 +41,5 @@ def get_access_token(code):
 
 def get_user_info(auth_token):
     get_me_url = "https://api.spotify.com/v1/me"
-    header = "Bearer {}"
     get_me_response = json.loads(requests.get(get_me_url, headers={'Authorization': header.format(auth_token)}).text)
     return get_me_response.get("id"), get_me_response.get("display_name")

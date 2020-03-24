@@ -2,15 +2,15 @@ import json
 
 import requests
 
-import Util.Request.requests as rq
 from Util.Model.playlist import Playlist
 from Util.Model.song import Song
+from Util.SpotifyRequest.requests import header
 
 
 def get_playlists(auth_token):
     url = "https://api.spotify.com/v1/me/playlists"
     playlists = list()
-    response = requests.get(url, headers={'Authorization': rq.header.format(auth_token)})
+    response = requests.get(url, headers={'Authorization': header.format(auth_token)})
 
     for response_item in json.loads(response.text).get("items"):
         playlists.append(Playlist(response_item.get("id"), response_item.get("name"),
@@ -33,7 +33,7 @@ def get_playlist_songs(auth_token, playlist):
     offset = 0
     limit = 50
     get_playlist_songs_response = requests.get(url.format(playlist.id, limit, offset),
-                                               headers={'Authorization': rq.header.format(auth_token)})
+                                               headers={'Authorization': header.format(auth_token)})
 
     while (len(json.loads(get_playlist_songs_response.text).get("items"))):
 
@@ -50,7 +50,7 @@ def get_playlist_songs(auth_token, playlist):
 
         offset += limit
         get_playlist_songs_response = requests.get(url.format(playlist.id, limit, offset),
-                                                   headers={'Authorization': rq.header.format(auth_token)})
+                                                   headers={'Authorization': header.format(auth_token)})
 
     return songs
 
@@ -62,7 +62,7 @@ def create_playlist(name, describtion, public, auth_token, user_id):
     })
     url = "https://api.spotify.com/v1/users/{user_id}/playlists".format(user_id=user_id)
 
-    response = requests.post(url=url, data=data, headers={'Authorization': rq.header.format(auth_token)})
+    response = requests.post(url=url, data=data, headers={'Authorization': header.format(auth_token)})
     response_json = json.loads(response.text)
     return Playlist(response_json.get("id"), name, response_json.get("external_urls").get("spotify"))
 
@@ -84,4 +84,4 @@ def add_songs_to_playlist(auth_token, songs, playlist_id):
         url = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks?uris={tracks}".format(playlist_id=playlist_id,
                                                                                                tracks=songs_uri)
 
-        requests.post(url=url, headers={'Authorization': rq.header.format(auth_token)})
+        requests.post(url=url, headers={'Authorization': header.format(auth_token)})
