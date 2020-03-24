@@ -4,22 +4,15 @@ import string
 
 import requests
 
+from SpotifyPlaylistGenerator.properties import Properties
 from Util.SpotifyRequest.requests import header
 
-
-def read_properties():
-    properties = open('settings.properties', 'r').read()
-    dict = {}
-    for line in properties.split('\n'):
-        prop = line.split('=')
-        dict[prop[0]] = prop[1]
-    return dict
+config = Properties()
 
 def get_user_permission():
-    config = read_properties()
     url = "https://accounts.spotify.com/authorize?client_id={}&response_type={}&redirect_uri={}&scope={}&state={}"
-    client_id = config.get("ClientID")
-    redirect_url = config.get("AuthCallback")
+    client_id = config.client_id
+    redirect_url = config.redirect_url
     secure_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=10))
     scopes = "user-read-private%20user-read-email%20user-library-read%20playlist-modify-public%20playlist-modify-private"
     url = url.format(client_id, "code", redirect_url, scopes, secure_string)
@@ -27,13 +20,12 @@ def get_user_permission():
     return secure_string, url
 
 def get_access_token(code):
-    config = read_properties()
-    client_id = config.get("ClientID")
-    client_secret = config.get("ClientSecret")
+    client_id = config.client_id
+    client_secret = config.client_secret
     data = {
         'grant_type': 'authorization_code',
         'code': code,
-        'redirect_uri': config.get("AuthCallback")
+        'redirect_uri': config.redirect_url
     }
     url = "https://accounts.spotify.com/api/token"
     post_song_response = requests.post(url, data=data, auth=(client_id, client_secret))
