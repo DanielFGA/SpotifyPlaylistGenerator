@@ -5,19 +5,36 @@
     <title>Select songs</title>
     <form action=go method="GET">
         {% csrf_token %}
+
         <div>
-            <button type="submit">Generate</button>
-            <input type="text" id="playlist_name" name="playlist_name" placeholder="select a playlist name"/>
+            <h2>Hello {{ display_name }}!</h2>
+            <input type="text" style="display: none" name="secure_string" value="{{ secure_string }}">
+            <p>
+                On this page you should choose at least five songs you want to hear and at least five songs you dont
+                want to hear.<br>
+                You also can choose whole playlists. But make sure that the playlist at least contains five songs.<br>
+                The machine learning algorithm need some comparisons to figure out what the best songs are for you!<br>
+                You can also choose an algorithm. Each algorithm provide differnt playlists.<br>
+                If you want to name you playlist, then type a name for you playlist in the text field next to
+                "Generate"-Button.<br>
+                At last click on the magical "Generate"-Button and wait. It can take some time. I hope you enjoy your
+                new playlist!
+            </p>
         </div>
 
         <div>
-            <label>
+            <h3>
                 Choose the algorithm:<br>
                 <select name="algorithm" size=2>
                     <option value="GDA" selected="selected">Gaussian Discriminant Analysis</option>
                     <option value="Cluster">Clustering</option>
                 </select>
-            </label>
+            </h3>
+        </div>
+        <br>
+        <div>
+            <button type="submit">Generate</button>
+            <input type="text" id="playlist_name" name="playlist_name" placeholder="select a playlist name"/>
         </div>
 
         <div>
@@ -25,7 +42,7 @@
                 <tr align="left">
                     <th>Playlist name</th>
                     <th>Yes or no (ignore: leave empty)</th>
-                    <label type="text">Playlist:</label>
+                    <h3 type="text">Playlist:</h3>
                     <ul>
                         {% for playlist in playlists %}
                             <tr align="left">
@@ -50,7 +67,7 @@
                     <th>Track</th>
                     <th>Artist</th>
                     <th>Yes or no (ignore: leave empty)</th>
-                    <label type="text">Playlist:</label>
+                    <h3 type="text">Tracks:</h3>
                     <ul>
                         {% for song in songs %}
                             <tr align="left">

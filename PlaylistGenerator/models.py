@@ -1,14 +1,14 @@
 # Create your models here.
-class User(object):
+from django.db import models
 
-    def __init__(self):
-        self.auth_code = ""
-        self.access_token = ""
-        self.secure_string = ""
-        self.id = ""
-        self.display_name = ""
-        self.songs = list()
-        self.playlists = list()
+
+class User(models.Model):
+    auth_code = models.CharField(max_length=1000)
+    access_token = models.CharField(max_length=1000)
+    secure_string = models.CharField(max_length=1000)
+    secure_string = models.CharField(max_length=1000)
+    user_id = models.CharField(max_length=1000)
+    display_name = models.CharField(max_length=1000)
 
     def set_auth_code(self, auth_code):
         self.auth_code = auth_code
@@ -20,7 +20,7 @@ class User(object):
         self.secure_string = secure_string
 
     def set_id(self, id):
-        self.id = id;
+        self.user_id = id;
 
     def set_display_name(self, display_name):
         self.display_name = display_name
