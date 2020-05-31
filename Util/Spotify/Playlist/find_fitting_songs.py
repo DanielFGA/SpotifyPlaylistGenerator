@@ -6,6 +6,7 @@ from Util.MachineLearning.ada_boost import WeakSongClassifier, AdaBoost
 from Util.MachineLearning.binary_classification_LR import BinaryClassification
 from Util.MachineLearning.clustering import Clustering
 from Util.MachineLearning.gaussian_discriminant_analysis import GaussianDiscriminantAnalysis
+from Util.MachineLearning.k_means import KMeans
 from Util.MachineLearning.matrix import Matrix
 
 
@@ -121,7 +122,6 @@ def find_songs_gda(good_songs, bad_songs, songs):
 
     return fitting_songs
 
-
 def find_songs_clustering(good_songs, bad_songs, songs):
     centers = np.zeros(shape=(2, len(songs[0].get_feature_vector())))
     dataset = []
@@ -149,9 +149,29 @@ def find_songs_clustering(good_songs, bad_songs, songs):
     return fitting_songs
 
 
+def k_means(songs, centers):
+    dataset = []
+
+    for song in songs:
+        dataset.append(song.get_feature_vector_with_class())
+
+    kmeans = KMeans(int(centers), dataset)
+
+    kmeans.run(1000)
+
+    for data, song in kmeans.dataset, songs:
+        song.my_class = data[len(data) - 1]
+
+    return songs
+
 def classify_songs(songs, good_songs, bad_songs, algorithm):
     songs_norm = normalize(songs)
     if algorithm == "GDA":
         return find_songs_gda(good_songs, bad_songs, songs_norm)
     if algorithm == "Cluster":
         return find_songs_clustering(good_songs, bad_songs, songs_norm)
+
+
+def build_cluster(songs, center_number):
+    songs_norm = normalize(songs)
+    return k_means(songs_norm, center_number)

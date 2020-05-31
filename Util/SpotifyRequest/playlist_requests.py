@@ -46,6 +46,7 @@ def get_playlist_songs(auth_token, playlist):
                 response_song.get("name"),
                 response_song.get("artists")[0].get("name")
             )
+            new_song.is_known = True
             songs.append(new_song)
 
         offset += limit

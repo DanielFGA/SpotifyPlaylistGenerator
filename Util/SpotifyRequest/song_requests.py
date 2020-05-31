@@ -16,7 +16,12 @@ def get_favorites_songs(auth_token):
 
     while (get_song_response.status_code != 502):
 
-        for response_item in json.loads(get_song_response.text).get("items"):
+        full_response = json.loads(get_song_response.text).get("items")
+
+        if (len(full_response) == 0):
+            break
+
+        for response_item in full_response:
             response_song = response_item.get("track")
             if (response_song.get("is_local")):
                 continue
@@ -25,6 +30,7 @@ def get_favorites_songs(auth_token):
                 response_song.get("name"),
                 response_song.get("artists")[0].get("name")
             )
+            new_song.is_known = True
             songs.append(new_song)
 
         offset += limit
@@ -33,7 +39,8 @@ def get_favorites_songs(auth_token):
 
     return songs
 
-def get_songs(auth_token, song_ids):
+
+def get_songs(auth_token, song_ids, is_known):
     get_song_url = "https://api.spotify.com/v1/tracks?ids={}"
     offset = 0
     limit = 50
@@ -67,6 +74,7 @@ def get_songs(auth_token, song_ids):
                 response_song.get("name"),
                 response_song.get("artists")[0].get("name")
             )
+            new_song.is_known = is_known
             songs.append(new_song)
             offset += 1
 

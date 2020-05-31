@@ -54,6 +54,7 @@ def authorizes_access(request):
 def generate_playlist(request):
     template = loader.get_template('PlaylistGenerator/finish.html')
     algorithm = request.GET.get("algorithm")
+    center_numbers = request.GET.get("cluster_number")
     playlist_name = request.GET.get("playlist_name") if len(request.GET.get("playlist_name")) > 0 else "unnamed"
     good_song_ids = request.GET.getlist("song_yes") if request.GET.get("song_yes") else list()
     bad_song_ids = request.GET.getlist("song_no") if request.GET.get("song_no") else list()
@@ -85,6 +86,8 @@ def generate_playlist(request):
     songs = (distict_sorted_list(songs))
 
     fitting_songs = classify_songs(songs, good_songs, bad_songs, algorithm)
+
+    fitting_songs = list(filter(lambda x: not x.is_known, fitting_songs))
 
     new_playlist = create_playlist(playlist_name, "Generated from ... with algorithm {}"
                                    .format(get_algorithm_name(algorithm)), False, user.access_token, user.user_id)

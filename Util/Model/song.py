@@ -6,7 +6,8 @@ class Song(object):
         self.id = id
         self.name = name
         self.artist = artist
-        self.my_class = 0;
+        self.my_class = 0
+        self.is_known = False
 
     def set_features(self, features):
         self.features = features

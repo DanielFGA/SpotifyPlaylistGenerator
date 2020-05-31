@@ -1,95 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Select songs</title>
-    <form action=go method="GET">
-        {% csrf_token %}
+<meta charset="UTF-8">
 
-        <div>
-            <h2>Hello {{ display_name }}!</h2>
-            <input type="text" style="display: none" name="secure_string" value="{{ secure_string }}">
-            <p>
-                On this page you should choose at least five songs you want to hear and at least five songs you dont
-                want to hear.<br>
-                You also can choose whole playlists. But make sure that the playlist at least contains five songs.<br>
-                The machine learning algorithm need some comparisons to figure out what the best songs are for you!<br>
-                You can also choose an algorithm. Each algorithm provide differnt playlists.<br>
-                If you want to name you playlist, then type a name for you playlist in the text field next to
-                "Generate"-Button.<br>
-                At last click on the magical "Generate"-Button and wait. It can take some time. I hope you enjoy your
-                new playlist!
-            </p>
-        </div>
-
-        <div>
-            <h3>
-                Choose the algorithm:<br>
-                <select name="algorithm" size=2>
-                    <option value="GDA" selected="selected">Gaussian Discriminant Analysis</option>
-                    <option value="Cluster">Clustering</option>
-                </select>
-            </h3>
-        </div>
-        <br>
-        <div>
-            <button type="submit">Generate</button>
-            <input type="text" id="playlist_name" name="playlist_name" placeholder="select a playlist name"/>
-        </div>
-
-        <div>
-            <table>
-                <tr align="left">
-                    <th>Playlist name</th>
-                    <th>Yes or no (ignore: leave empty)</th>
-                    <h3 type="text">Playlist:</h3>
-                    <ul>
-                        {% for playlist in playlists %}
-                            <tr align="left">
-                                <th>{{ playlist.name }}</th>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" name="playlist_yes" value="{{ playlist.id }}">Yes
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="playlist_no" value="{{ playlist.id }}">No
-                                    </label>
-                                <th>
-                            </tr>
-                        {% endfor %}
-                </ul>
-            </table>
-        </div>
-
-        <div>
-            <table>
-                <tr align="left">
-                    <th>Track</th>
-                    <th>Artist</th>
-                    <th>Yes or no (ignore: leave empty)</th>
-                    <h3 type="text">Tracks:</h3>
-                    <ul>
-                        {% for song in songs %}
-                            <tr align="left">
-                                <th>{{ song.name }}</th>
-                                <th>{{ song.artist }}</th>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" name="song_yes" value="{{ song.id }}">Yes
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="song_no" value="{{ song.id }}">No
-                                    </label>
-                                <th>
-                            </tr>
-                        {% endfor %}
-                </ul>
-            </table>
-        </div>
-
-    </form>
 </head>
-<body>
 
+</head>
+
+<body>
+<title>Select songs</title>
+<form action=go method="GET">
+    {% csrf_token %}
+
+    <div>
+        <h2>Hello {{ display_name }}!</h2>
+        <input type="text" style="display: none" name="secure_string" value="{{ secure_string }}">
+        <p>
+            On this page you should choose at least five songs you want to hear and at least five songs you dont
+            want to hear.<br>
+            You also can choose whole playlists. But make sure that the playlist at least contains five songs.<br>
+            The machine learning algorithm need some comparisons to figure out what the best songs are for you!<br>
+            You can also choose an algorithm. Each algorithm provide differnt playlists.<br>
+            If you want to name you playlist, then type a name for you playlist in the text field next to
+            "Generate"-Button.<br>
+            At last click on the magical "Generate"-Button and wait. It can take some time. I hope you enjoy your
+            new playlist!
+        </p>
+    </div>
+
+    <div>
+        <h3>
+            Choose the algorithm:<br>
+        </h3>
+        <select id="algorithm_select" name="algorithm" size=2>
+            <option value="GDA" selected="selected">Gaussian Discriminant Analysis</option>
+            <option value="Cluster">Clustering</option>
+        </select>
+        <div id="cluster_number_div" style="display: none">
+            Cluster numer:
+            <input type="number" id="cluster_number" name="cluster_number" min="2" max="10" value="2"/>
+        </div>
+    </div>
+    <br>
+    <div>
+        <button type="submit">Generate</button>
+        <input type="text" id="playlist_name" name="playlist_name" placeholder="select a playlist name"/>
+    </div>
+
+    <div>
+        <table>
+            <tr align="left">
+                <th>Playlist name</th>
+                <th>Yes or no (ignore: leave empty)</th>
+                <h3 type="text">Playlist:</h3>
+                <ul>
+                    {% for playlist in playlists %}
+                        <tr align="left">
+                            <th>{{ playlist.name }}</th>
+                            <th>
+                                <label>
+                                    <input type="checkbox" name="playlist_yes" value="{{ playlist.id }}">Yes
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="playlist_no" value="{{ playlist.id }}">No
+                                </label>
+                            <th>
+                        </tr>
+                    {% endfor %}
+            </ul>
+        </table>
+    </div>
+
+    <div>
+        <table>
+            <tr align="left">
+                <th>Track</th>
+                <th>Artist</th>
+                <th>Yes or no (ignore: leave empty)</th>
+                <h3 type="text">Tracks:</h3>
+                <ul>
+                    {% for song in songs %}
+                        <tr align="left">
+                            <th>{{ song.name }}</th>
+                            <th>{{ song.artist }}</th>
+                            <th>
+                                <label>
+                                    <input type="checkbox" name="song_yes" value="{{ song.id }}">Yes
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="song_no" value="{{ song.id }}">No
+                                </label>
+                            <th>
+                        </tr>
+                    {% endfor %}
+            </ul>
+        </table>
+    </div>
+</form>
 </body>
+
+<script type="text/javascript">
+    var myDiv = document.getElementById("cluster_number_div");
+    document.getElementById("algorithm_select").onchange = function () {
+        myDiv.style.display = (this.selectedIndex == 2) ? "block" : "none";
+    }
+</script>
+
 </html>
