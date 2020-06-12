@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class AdaBoost(object):
 
     def __init__(self, dataset, weak_classifiers):
@@ -12,8 +13,9 @@ class AdaBoost(object):
         self.error = np.zeros(shape=len(self.weak_classifier))
 
         for h in range(0, len(self.weak_classifier)):
-            for i in range(0, len(self.dataset)-1):
-                self.error[h] += self.distrubution[i] *(self.delta(self.weak_classifier[h], self.dataset[i][:-1], self.dataset[i][9]))
+            for i in range(0, len(self.dataset) - 1):
+                self.error[h] += self.distrubution[i] * (
+                    self.delta(self.weak_classifier[h], self.dataset[i][:-1], self.dataset[i][9]))
 
         self.min_error = self.error.argmin()
         self.alpha_current = self.calc_alpha(self.min_error)
@@ -37,12 +39,14 @@ class AdaBoost(object):
             y_i_predict = self.weak_classifier[self.min_error].classify(X)
             y_i = self.dataset[i][9]
             alpha = self.alpha_current
-            self.distrubution[i] = (self.distrubution[i] * np.exp(-alpha * y_i * y_i_predict)) /  (1 / np.sum(self.distrubution))
+            self.distrubution[i] = (self.distrubution[i] * np.exp(-alpha * y_i * y_i_predict)) / (
+                    1 / np.sum(self.distrubution))
 
     def final(self, X):
         for classifer in self.choosen_classifier:
-            sum+= classifer[1] * self.weak_classifier[classifer[0]].classify(X)
+            sum += classifer[1] * self.weak_classifier[classifer[0]].classify(X)
         return np.sign(sum)
+
 
 class WeakSongClassifier(object):
 

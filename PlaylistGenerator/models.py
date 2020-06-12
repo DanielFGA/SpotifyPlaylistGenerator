@@ -26,4 +26,5 @@ class User(models.Model):
         self.display_name = display_name
 
     def __repr__(self):
-        return "auth_code={}, access_token={}, secure_string={}".format(self.auth_code, self.access_token, self.secure_string)
+        return "auth_code={}, access_token={}, secure_string={}".format(self.auth_code, self.access_token,
+                                                                        self.secure_string)

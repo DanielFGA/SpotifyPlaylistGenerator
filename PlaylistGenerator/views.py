@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 
 from PlaylistGenerator.models import User
-from Util.Spotify.Browse.recommended_songs import get_recommended_songs_forall
+from Util.Spotify.Browse.recommended_songs import collect_recommended_songs
 from Util.Spotify.Playlist.find_fitting_songs import classify_songs
 from Util.SpotifyRequest.playlist_requests import *
 from Util.SpotifyRequest.song_requests import *
@@ -13,12 +13,16 @@ def start(request):
     template = loader.render_to_string('PlaylistGenerator/start.html')
     return HttpResponse(template)
 
+
 def auth_start(request):
     user = User.objects.create()
-    secure_string, url = get_user_permission()
+    secure_string, url = get_user_permission(
+        ['user-read-private', 'user-read-email', 'user-library-read', 'playlist-modify-public',
+         'playlist-modify-private'])
     user.set_secure_string(secure_string)
     user.save()
     return HttpResponseRedirect(url)
+
 
 def authorizes_access(request):
     template = loader.get_template('PlaylistGenerator/select.html')
@@ -42,7 +46,7 @@ def authorizes_access(request):
     playlists, songs = get_playlists_and_songs(user)
 
     context = {
-        'playlists' : playlists,
+        'playlists': playlists,
         'songs': songs,
         'secure_string': user.secure_string,
         'display_name': user.display_name
@@ -80,7 +84,7 @@ def generate_playlist(request):
         if song.id in bad_song_ids:
             bad_songs.append(song)
 
-    songs.extend(get_recommended_songs_forall(user.access_token, good_songs))
+    songs.extend(collect_recommended_songs(user.access_token, good_songs, 1))
     set_features_for_songs(user.access_token, songs)
 
     songs = (distict_sorted_list(songs))

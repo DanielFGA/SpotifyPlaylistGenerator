@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Song(object):
 
     def __init__(self, id, name, artist):
@@ -51,7 +52,8 @@ class Features(object):
         self.liveness = check_for_zero_value(round(liveness, round_digits))
         self.valence = check_for_zero_value(round(valence, round_digits))
         self.tempo = check_for_zero_value(round(tempo, round_digits))
-        self.feature_vector = np.array([self.danceability, self.energy, self.acousticness, self.liveness, self.valence, self.tempo])
+        self.feature_vector = np.array(
+            [self.danceability, self.energy, self.acousticness, self.liveness, self.valence, self.tempo])
 
     def get_as_vector(self):
         return self.feature_vector
@@ -59,8 +61,9 @@ class Features(object):
     def set_feature(self, feature, value):
         self.feature_vector[feature] = value
 
+
 def check_for_zero_value(value):
-        if (value == 0):
-            return value + 0.0001
-        else:
-            return value
+    if (value == 0):
+        return value + 0.0001
+    else:
+        return value

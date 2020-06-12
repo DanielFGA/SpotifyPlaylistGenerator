@@ -18,10 +18,12 @@ def get_recommendations_seed(auth_token, seed_artist, seed_genres, seed_tracks):
         generate_parameter("seed_tracks", seed_tracks, "%2C")], "&")
     header = "Bearer {}"
 
-    get_recommendations_seed_response = requests.get(url.format(url_parameter), headers={'Authorization': header.format(auth_token)})
+    get_recommendations_seed_response = requests.get(url.format(url_parameter),
+                                                     headers={'Authorization': header.format(auth_token)})
 
     while (get_recommendations_seed_response.status_code != 200):
-        get_recommendations_seed_response = requests.get(url.format(url_parameter), headers={'Authorization': header.format(auth_token)})
+        get_recommendations_seed_response = requests.get(url.format(url_parameter),
+                                                         headers={'Authorization': header.format(auth_token)})
 
     for response_song in json.loads(get_recommendations_seed_response.text).get("tracks"):
         new_song = Song(
@@ -32,4 +34,3 @@ def get_recommendations_seed(auth_token, seed_artist, seed_genres, seed_tracks):
         songs.append(new_song)
 
     return songs
-

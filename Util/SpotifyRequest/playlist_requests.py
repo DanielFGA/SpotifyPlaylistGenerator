@@ -18,6 +18,7 @@ def get_playlists(auth_token):
 
     return playlists
 
+
 def get_playlists_songs(auth_token, playlists):
     songs = list()
 
@@ -26,6 +27,7 @@ def get_playlists_songs(auth_token, playlists):
         playlist.set_songs(playlist_songs)
         songs.extend(playlist_songs)
     return songs
+
 
 def get_playlist_songs(auth_token, playlist):
     url = "https://api.spotify.com/v1/playlists/{}/tracks?limit={}&offset={}"
@@ -55,6 +57,7 @@ def get_playlist_songs(auth_token, playlist):
 
     return songs
 
+
 def create_playlist(name, describtion, public, auth_token, user_id):
     data = json.dumps({
         'name': name,
@@ -66,6 +69,7 @@ def create_playlist(name, describtion, public, auth_token, user_id):
     response = requests.post(url=url, data=data, headers={'Authorization': header.format(auth_token)})
     response_json = json.loads(response.text)
     return Playlist(response_json.get("id"), name, response_json.get("external_urls").get("spotify"))
+
 
 def add_songs_to_playlist(auth_token, songs, playlist_id):
     if (len(songs) > 50):

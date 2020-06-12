@@ -25,7 +25,7 @@ class KMeans(object):
                 amout_center += 1
 
     def run(self, runs):
-        for i in range(runs):
+        for _ in range(runs):
             self.assign_centre()
             self.re_calc_centre()
         self.assign_centre()
@@ -67,9 +67,3 @@ class KMeans(object):
 
     def __repr__(self):
         return "centers = {c}".format(c=self.centre)
-
-
-
-
-
-

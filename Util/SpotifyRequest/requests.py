@@ -1,5 +1,6 @@
 header = "Bearer {}"
 
+
 def generate_parameter(parameter_name, parameter_values, seperator):
     if (len(parameter_values) == 0):
         return ""
@@ -12,6 +13,7 @@ def generate_parameter(parameter_name, parameter_values, seperator):
     parameter = parameter[:-len(seperator)]
 
     return parameter
+
 
 def concat_parameter(parameters, seperator):
     concats = ""

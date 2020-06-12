@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # TODO rewrite
 class Matrix(object):
 
@@ -17,27 +18,27 @@ class Matrix(object):
     def get_all_for_class(self, c):
         ret = []
         for m in self.matrix_gda:
-            if (m[self.x_len()-1] == c):
+            if (m[self.x_len() - 1] == c):
                 ret.append(m)
         return Matrix(ret)
 
     def get_all_attributes_for_class(self, c):
         ret = []
         for m in self.matrix_gda:
-            if (m[self.x_len()-1] == c):
-              ret.append(m[0:self.x_len()-1])
+            if (m[self.x_len() - 1] == c):
+                ret.append(m[0:self.x_len() - 1])
         return Matrix(ret)
 
     def get_x_attr(self, dataset):
         return Matrix(self.matrix_gda[dataset][0:self.x_len() - 1])
 
     def get_class(self, dataset):
-        return self.matrix_gda[dataset][self.x_len()-1]
+        return self.matrix_gda[dataset][self.x_len() - 1]
 
     def count_class(self, c):
         counter = 0
         for m in self.matrix_gda:
-            if (m[self.x_len()-1] == c):
+            if (m[self.x_len() - 1] == c):
                 counter += 1
         return counter
 
@@ -60,13 +61,13 @@ class Matrix(object):
                     prod += self.matrix_gda[x][i] * matrix_2.matrix_gda[i][y]
                 prod_matrix[x][y] = prod
         return Matrix(prod_matrix)
-    
+
     def cut_matrix(self, start, end_right, end_down):
         matrix = []
-        for y in range(start[1]-1, end_down):
-            matrix.append(self.matrix_gda[y][start[0]-1:end_right])
+        for y in range(start[1] - 1, end_down):
+            matrix.append(self.matrix_gda[y][start[0] - 1:end_right])
         return matrix(matrix)
-    
+
     def avg_value(self):
         avg = 0
         counter = 0
@@ -81,12 +82,12 @@ class Matrix(object):
 
     def inverse(self):
         return Matrix(np.linalg.inv(self.matrix_gda))
-    
+
     def determinate(self):
         return np.linalg.det(self.matrix_gda)
 
     def easy_det(self):
-        return (self.matrix_gda[0,0] * self.matrix_gda[1,1]) - (self.matrix_gda[1,0] * self.matrix_gda[0,1])
+        return (self.matrix_gda[0, 0] * self.matrix_gda[1, 1]) - (self.matrix_gda[1, 0] * self.matrix_gda[0, 1])
 
     def __add__(self, other):
         return Matrix(self.get_matrix() + other.get_matrix())
@@ -123,9 +124,6 @@ class Matrix(object):
             return False
         for y in range(len(self.matrix_gda)):
             for x in range(len(self.matrix_gda[y])):
-                if self.matrix_gda[x,y] != self.matrix_gda[y, x]:
+                if self.matrix_gda[x, y] != self.matrix_gda[y, x]:
                     return False
         return True
-
-
-    
